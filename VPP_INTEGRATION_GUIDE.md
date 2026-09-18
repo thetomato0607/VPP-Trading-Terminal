@@ -2,7 +2,7 @@
 
 ## Overview
 
-Your **SolarPal** project has been upgraded from a simple solar calculator into a **professional Virtual Power Plant simulator** with physics-constrained battery optimization.
+Your **VPP-Trading-Terminal** project has been upgraded from a simple solar calculator into a **professional Virtual Power Plant simulator** with physics-constrained battery optimization.
 
 ### What's New
 
@@ -19,8 +19,9 @@ The VPP system adds three powerful capabilities:
 ### New Files Added
 
 ```
+modules/
+└── optimization.py        # Core optimization engine (Linear Programming)
 backend/
-├── vpp_engine.py          # Core optimization engine (Linear Programming)
 ├── routes/
 │   └── vpp.py             # FastAPI endpoints for VPP services
 └── models.py              # Updated with VPP request/response models
@@ -28,7 +29,7 @@ backend/
 
 ### Key Components
 
-#### 1. `VPPOptimizer` Class ([backend/vpp_engine.py](backend/vpp_engine.py))
+#### 1. `VPPOptimizer` Class ([modules/optimization.py](modules/optimization.py))
 
 The heart of the system. Uses `scipy.optimize.linprog` to solve:
 
@@ -458,7 +459,7 @@ open http://localhost:8000/docs
 
 ### Code References
 
-- **VPP Engine:** [backend/vpp_engine.py](backend/vpp_engine.py)
+- **Optimization Engine:** [modules/optimization.py](modules/optimization.py)
 - **API Routes:** [backend/routes/vpp.py](backend/routes/vpp.py)
 - **Data Models:** [backend/models.py](backend/models.py)
 
@@ -466,7 +467,7 @@ open http://localhost:8000/docs
 
 ## Summary
 
-Your SolarPal project now includes:
+Your VPP-Trading-Terminal project now includes:
 
 - **Professional-grade optimization** using Linear Programming
 - **Physics-based constraints** (grid limits, battery dynamics)
@@ -482,7 +483,7 @@ Your SolarPal project now includes:
 ---
 
 **Built with:** Python, FastAPI, SciPy, NumPy, Pandas
-**Author:** SolarPal Team
+**Author:** VPP Trading Terminal Team
 **Version:** 2.0.0
 
 **Your student project is now a professional VPP simulator!**

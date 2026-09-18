@@ -22,8 +22,8 @@ This project bridges the gap between **Quantitative Finance** and **Power System
 
 ### 1. Installation
 ```bash
-git clone [https://github.com/thetomato0607/SolarPal.git](https://github.com/thetomato0607/SolarPal.git)
-cd SolarPal
+git clone https://github.com/thetomato0607/VPP-Trading-Terminal.git
+cd VPP-Trading-Terminal
 pip install -r requirements.txt
 
 ### 2. Run the Dashboard
@@ -129,7 +129,7 @@ The grid constraint is **mathematically guaranteed** by the LP solver.
 ## Project Structure
 
 ```
-SolarPal/
+VPP-Trading-Terminal/
 ├── app.py                  # Main Dashboard Entry Point
 ├── modules/                # Core Logic Modules
 │   ├── optimization.py     # Linear Programming Solver (SciPy)
@@ -138,6 +138,8 @@ SolarPal/
 │   └── visualization.py    # Plotly Charting
 ├── docs/                   # Technical Documentation
 └── requirements.txt        # Dependencies
+```
+
 ---
 
 ## Configuration
@@ -254,7 +256,7 @@ MIT License - Free to use for educational and portfolio purposes.
 
 ## Author
 
-**SolarPal Team**
+**VPP Trading Terminal Team**
 
 Built to demonstrate quantitative optimization and power systems engineering for energy sector recruitment.
 

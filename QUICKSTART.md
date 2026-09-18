@@ -3,7 +3,8 @@
 ## Launch in 3 Commands
 
 ```bash
-cd "c:\Users\Frankie Lam\OneDrive\Documents\SolarPal"
+git clone https://github.com/thetomato0607/VPP-Trading-Terminal.git
+cd VPP-Trading-Terminal
 pip install -r requirements.txt
 streamlit run app.py
 ```
