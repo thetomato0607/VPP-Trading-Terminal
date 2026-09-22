@@ -15,8 +15,15 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Run Integration Tests
+        # backend/requirements.txt is currently empty; install it too in
+        # case backend-specific deps are added later.
+        if [ -s backend/requirements.txt ]; then
+          pip install -r backend/requirements.txt
+        fi
+    - name: Run test suite (pytest)
       run: |
-        # Add project root to PYTHONPATH so tests can find modules
-        export PYTHONPATH=$PYTHONPATH:$(pwd)
-        python backend/test_vpp_integration.py
+        # pytest.ini sets `pythonpath = . backend` so imports resolve the
+        # same way regardless of which directory pytest is invoked from.
+        # RUN_LIVE_API_TESTS is intentionally left unset so the live
+        # api.octopus.energy tests in test_api.py stay skipped in CI.
+        pytest -v
