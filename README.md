@@ -2,7 +2,7 @@
 
 > **A professional Virtual Power Plant (VPP) simulation platform that balances economic optimization with physical grid constraints.**
 
-[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red.svg)](https://streamlit.io)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -25,6 +25,9 @@ This project bridges the gap between **Quantitative Finance** and **Power System
 git clone https://github.com/thetomato0607/VPP-Trading-Terminal.git
 cd VPP-Trading-Terminal
 pip install -r requirements.txt
+```
+
+Tested with Python 3.10 (CI) and 3.11.
 
 ### 2. Run the Dashboard
 
@@ -33,6 +36,17 @@ streamlit run app.py
 ```
 
 **Opens at:** `http://localhost:8501`
+
+### 3. Optional: API backend and tests
+
+```bash
+cd backend
+uvicorn main:app --reload --port 8000   # API docs at http://localhost:8000/docs
+```
+
+```bash
+pytest   # from the repo root; live Octopus API tests skip unless RUN_LIVE_API_TESTS=1
+```
 
 ---
 
@@ -56,8 +70,8 @@ Because this is a convex problem, the solver guarantees mathematical compliance 
 ## Features & Architecture
 
 ### 1. **The Market Engine** (Financial Optimization)
-- Algorithm: Uses scipy.optimize.linprog (HiGHS solver) for interior-point optimization.
-- Simulation: Generates realistic UK "Duck Curve" pricing, handling negative pricing events and evening scarcity peaks.
+- Algorithm: `scipy.optimize.linprog` with `method='highs'` (HiGHS picks simplex or interior point).
+- Prices: a synthetic UK "duck curve" with evening scarcity peaks (floored at 1p/kWh, so never negative), or optional live Octopus Agile prices.
 - Metrics: Calculates Sharpe Ratio and risk-adjusted returns in real-time.
 
 ### 2. **Grid Engine** (Physical Constraints)
@@ -76,7 +90,7 @@ Because this is a convex problem, the solver guarantees mathematical compliance 
 
 ### Main Dashboard
 ![Dashboard](docs/images/dashboard.png)
-*Bloomberg-terminal style metrics: Profit, Payback, Sharpe Ratio, Grid Compliance*
+*Metrics row: profit, degradation, payback, Sharpe ratio, grid status (synthetic-price scenario)*
 
 ### Financial Optimization
 ![Price Chart](docs/images/price_chart.png)
@@ -103,7 +117,7 @@ Subject to:
     4. Energy conservation: SoC dynamics with 90% efficiency
 ```
 
-**Solver:** SciPy's HiGHS (interior-point Linear Programming)
+**Solver:** SciPy's HiGHS LP solver (`linprog(method='highs')`)
 
 ### Why This Matters
 
@@ -130,14 +144,20 @@ The grid constraint is **mathematically guaranteed** by the LP solver.
 
 ```
 VPP-Trading-Terminal/
-├── app.py                  # Main Dashboard Entry Point
-├── modules/                # Core Logic Modules
-│   ├── optimization.py     # Linear Programming Solver (SciPy)
-│   ├── grid_physics.py     # Voltage & Thermal Physics
-│   ├── market_data.py      # Price & Load Generators
-│   └── visualization.py    # Plotly Charting
-├── docs/                   # Technical Documentation
-└── requirements.txt        # Dependencies
+├── app.py                  # Streamlit dashboard (entry point)
+├── modules/                # Core engines
+│   ├── optimization.py     # LP battery scheduler (SciPy HiGHS)
+│   ├── grid_physics.py     # Voltage-rise and grid-stress checks
+│   ├── market_data.py      # Synthetic solar, load and price profiles
+│   ├── live_data.py        # Optional Octopus Agile price client
+│   ├── degradation.py      # Battery wear cost
+│   └── visualization.py    # Plotly charts
+├── backend/                # Optional FastAPI service (main.py, models.py, routes/)
+├── tests/                  # pytest suite
+├── docs/                   # Quickstart, integration guide, README images
+├── .streamlit/config.toml  # Dashboard theme
+├── requirements.txt        # Pinned dependencies
+└── pytest.ini              # Test paths
 ```
 
 ---
@@ -160,6 +180,8 @@ VPP-Trading-Terminal/
 ---
 
 ## Example Results
+
+Illustrative output from one synthetic scenario; values change with every generated scenario.
 
 ### Typical Daily Performance:
 ```
@@ -184,7 +206,7 @@ Battery Benefit:         +£2.20/day
 
 ## Technical Stack
 
-- **Backend:** Python 3.9+, SciPy, NumPy
+- **Backend:** Python 3.10/3.11, SciPy, NumPy
 - **Optimization:** Linear Programming (HiGHS solver)
 - **Frontend:** Streamlit (dark mode)
 - **Visualization:** Plotly (interactive charts)
@@ -215,14 +237,12 @@ Battery Benefit:         +£2.20/day
 ### Coming Soon:
 1. **Stochastic Programming:** Handle forecast uncertainty
 2. **Model Predictive Control:** Rolling horizon optimization
-3. **Battery Degradation:** Cycle-wear cost modeling
-4. **Frequency Response:** FFR/DFS grid services
-5. **Fleet Aggregation:** Multi-home coordination
+3. **Frequency Response:** FFR/DFS grid services
+4. **Fleet Aggregation:** Multi-home coordination
 
 ### Extensibility:
 The modular architecture makes it easy to add:
-- Real weather APIs (OpenWeatherMap)
-- Live pricing (Octopus Agile API)
+- Real weather APIs (the `/solar` backend routes currently return placeholder data)
 - Hardware interfaces (Tesla Powerwall API)
 - Machine learning forecasts
 
@@ -230,15 +250,14 @@ The modular architecture makes it easy to add:
 
 ## Documentation
 
-- **Integration Guide:** [VPP_INTEGRATION_GUIDE.md](VPP_INTEGRATION_GUIDE.md)
-- **Interview Prep:** [INTERVIEW_GUIDE.md](INTERVIEW_GUIDE.md)
-- **Cleanup Guide:** [CLEANUP_GUIDE.md](CLEANUP_GUIDE.md)
+- **Quickstart:** [docs/QUICKSTART.md](docs/QUICKSTART.md)
+- **Integration Guide:** [docs/VPP_INTEGRATION_GUIDE.md](docs/VPP_INTEGRATION_GUIDE.md)
 
 ---
 
 ## Contributing
 
-This is a portfolio project, but suggestions welcome!
+This is a portfolio project, but suggestions are welcome: open an issue or pull request on GitHub.
 
 **Areas for contribution:**
 - Real-world data integration
@@ -250,13 +269,13 @@ This is a portfolio project, but suggestions welcome!
 
 ## License
 
-MIT License - Free to use for educational and portfolio purposes.
+MIT — see [LICENSE](LICENSE).
 
 ---
 
 ## Author
 
-**VPP Trading Terminal Team**
+**Frankie Lam**
 
 Built to demonstrate quantitative optimization and power systems engineering for energy sector recruitment.
 
@@ -282,7 +301,7 @@ Built to demonstrate quantitative optimization and power systems engineering for
 
 **Algorithm:**
 - Method: Linear Programming (convex optimization)
-- Solver: HiGHS (modern interior-point)
+- Solver: HiGHS (SciPy `linprog`)
 - Guarantee: Global optimum (no local minima)
 
 ---
@@ -307,6 +326,10 @@ We use Linear Programming (not heuristics) because:
 - **Fast:** Solves in real-time (<0.5s)
 - **Explainable:** Can justify decisions to regulators
 
+### Known issues:
+- **Degradation cost is understated.** `modules/degradation.py` squares each 15-minute step's discharge fraction instead of each cycle's depth, so a full discharge costs about 0.09 cycles' worth instead of 1.
+- **Solar API routes are placeholders.** `backend/routes/solar.py` returns fixed synthetic data.
+
 ### For Recruiters:
 This project demonstrates:
 - Quantitative optimization (LP formulation)
@@ -321,8 +344,10 @@ This project demonstrates:
 
 ## AI assistance
 
-Parts of this repository were written or changed with Claude, Anthropic's AI assistant. Affected code is marked in place with comments of the form `AI-assisted (Claude, <commit>)`; list them with `git grep -n "AI-assisted"`.
+Parts of this repository were written or changed with AI assistants. Affected code is marked in place with comments of the form `AI-assisted (<tool>, <commit>)`; list them with `git grep -n "AI-assisted"`.
 
-- `9308ab3`: `backend/main.py` (new), README/guide fixes, LICENSE, dependency pins.
-- `7f566e9`: test checks converted to real asserts, live-API tests gated behind `RUN_LIVE_API_TESTS`, `pytest.ini`, CI step, dependency pins.
-- The commit that added this section: docstrings and explanatory comments across the code.
+- `442f313` (OpenAI Codex, merged via PR #41): error handling around the optimization run and the grid-violations table in `app.py`. Earlier `codex/*` PRs (#25–#40) only touched the React frontend, which has since been removed.
+- `9308ab3` (Claude): `backend/main.py` (new), README/guide fixes, LICENSE, dependency pins.
+- `7f566e9` (Claude): test checks converted to real asserts, live-API tests gated behind `RUN_LIVE_API_TESTS`, `pytest.ini`, CI step, dependency pins.
+- `636b163` (Claude): docstrings and explanatory comments across the code.
+- The commit after `636b163` (Claude): tests moved into `tests/`, guides into `docs/`, duplicate and editor-specific files removed, README screenshots and corrections.

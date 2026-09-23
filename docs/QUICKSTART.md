@@ -201,9 +201,8 @@ Grid Checker:       modules/grid_physics.py
 Market Data:        modules/market_data.py
 Charts:             modules/visualization.py
 
-Full Docs:          VPP_INTEGRATION_GUIDE.md
-Interview Prep:     INTERVIEW_GUIDE.md
-Cleanup:            CLEANUP_GUIDE.md
+Full Docs:          docs/VPP_INTEGRATION_GUIDE.md
+Tests:              tests/ (run with: pytest)
 ```
 
 ---

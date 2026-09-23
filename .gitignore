@@ -1,11 +1,16 @@
-node_modules/
-dist/
-.env
-.vscode/
-
+# Python
 __pycache__/
-*.pyc
-Tools/Heat pump visualizer.docx
+*.py[cod]
+.pytest_cache/
 
+# Environments and secrets
+.venv/
+venv/
+.env
 
+# Editors and local tool settings
+.vscode/
+.claude/settings.local.json
+
+# Personal notes kept out of the repo
 INTERVIEW_GUIDE.md

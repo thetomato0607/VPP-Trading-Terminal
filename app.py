@@ -8,7 +8,7 @@ Bloomberg-style dashboard for grid-connected battery optimization.
 """
 
 import streamlit as st
-from dataclasses import asdict
+from dataclasses import asdict  # AI-assisted (Codex, 442f313 via PR #41): for the violations table.
 from modules.optimization import BatteryOptimizer, BatteryAsset, calculate_baseline_cost
 from modules.grid_physics import GridConstraintChecker
 from modules.market_data import MarketDataGenerator
@@ -324,6 +324,8 @@ st.markdown("""
 # Always run optimization (automatically updates when sliders change)
 if True:
     with st.spinner("Running optimization engine..."):
+        # AI-assisted (Codex, 442f313 via PR #41): try/except for in-app error reporting; the
+        # optimization steps inside predate it and were only re-indented.
         try:
             # Smart caching: Cache market scenario (solar/load/prices) separately from asset optimization
             # Market scenario depends on: region, solar size, load, volatility, clouds
@@ -492,6 +494,7 @@ if 'result' in st.session_state:
 
     st.plotly_chart(grid_chart, use_container_width=True)
 
+    # AI-assisted (Codex, 442f313 via PR #41): grid-violations table.
     if grid_analysis.get('violations'):
         st.markdown("#### Grid Violations")
         violation_rows = [asdict(v) for v in grid_analysis['violations']]

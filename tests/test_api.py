@@ -8,12 +8,12 @@ These tests make LIVE, unmocked network calls to api.octopus.energy.
 They are skipped by default (including in CI) and only run when the
 RUN_LIVE_API_TESTS environment variable is set, e.g.:
 
-    RUN_LIVE_API_TESTS=1 pytest test_api.py
+    RUN_LIVE_API_TESTS=1 pytest tests/test_api.py
 
 Run this BEFORE integrating into your main app to verify everything works.
 
 Usage:
-    python test_api.py
+    python tests/test_api.py
 """
 
 # AI-assisted (Claude, 7f566e9): checks converted from print/return-bool to real

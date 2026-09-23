@@ -8,7 +8,6 @@ Verifies that the VPP engine is properly integrated and working.
 # asserts with Claude.
 
 import sys
-import os
 
 
 def test_vpp_engine():
@@ -18,9 +17,7 @@ def test_vpp_engine():
     print("="*70)
 
     # Import from consolidated modules (single source of truth)
-    # Add project root to path
-    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
+    sys.path.insert(0, '..')
     from modules.optimization import BatteryOptimizer, BatteryAsset
     from modules.market_data import MarketDataGenerator
 
@@ -62,6 +59,21 @@ def test_vpp_engine():
     print(f"  Net Profit: {result.net_profit_gbp:.2f} GBP")
     print(f"  Sharpe Ratio: {result.sharpe_ratio:.2f}")
 
+    # Verify constraints
+    max_export = max(result.grid_export_kw)
+    grid_limit = 4.0
+    print(f"\n  Max grid export: {max_export:.3f} kW")
+    print(f"  Grid limit: {grid_limit:.3f} kW")
+
+    assert max_export <= grid_limit + 1e-6, "Grid constraint violated!"
+    print(f"[PASS] Grid constraint satisfied: {max_export:.3f} <= {grid_limit}")
+
+    # Check SoC bounds
+    min_soc = min(result.soc_trajectory_pct)
+    max_soc = max(result.soc_trajectory_pct)
+    assert 0 <= min_soc and max_soc <= 100, "Battery SoC out of bounds!"
+    print(f"[PASS] Battery SoC within bounds: [{min_soc:.1f}%, {max_soc:.1f}%]")
+
 
 def test_api_routes():
     """Test that API routes are properly configured."""
@@ -69,8 +81,6 @@ def test_api_routes():
     print("TEST 2: API Route Configuration")
     print("="*70)
 
-    # Ensure backend is in path
-    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     from routes import vpp
     print("[PASS] VPP routes module imported")
 
@@ -93,9 +103,12 @@ def test_models():
     print("TEST 3: Pydantic Models")
     print("="*70)
 
-    # Ensure backend is in path
-    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from models import VPPOptimizationRequest
+    from models import (
+        VPPOptimizationRequest,
+        VPPOptimizationResult,
+        GridImpactAnalysis,
+        VPPSimulationResponse
+    )
 
     print("[PASS] All VPP models imported")
 
@@ -113,11 +126,6 @@ def test_main_integration():
     print("TEST 4: Main App Integration")
     print("="*70)
 
-    # FIX: Add current directory (backend) to path so we can find main.py
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    if current_dir not in sys.path:
-        sys.path.insert(0, current_dir)
-
     try:
         from main import app
     except ImportError:
@@ -130,10 +138,12 @@ def test_main_integration():
 
     assert len(vpp_routes) > 0, "No VPP routes found in main app"
     print(f"[PASS] Found {len(vpp_routes)} VPP routes in main app")
+    for route in vpp_routes[:5]:  # Show first 5
+        print(f"  - {route}")
 
 
 def run_all_tests():
-    """Run complete test suite as a standalone script (`python test_vpp_integration.py`)."""
+    """Standalone runner; prefer `pytest tests/test_integration.py`, which sets up import paths."""
     print("\n" + "="*70)
     print(" VPP INTEGRATION TEST SUITE ".center(70, "="))
     print("="*70)
@@ -177,6 +187,10 @@ def run_all_tests():
 
     if passed_count == total:
         print("\n[SUCCESS] All tests passed! Your VPP is ready to use.")
+        print("\nNext steps:")
+        print("  1. Start server: uvicorn main:app --reload")
+        print("  2. Visit docs: http://localhost:8000/docs")
+        print("  3. Test endpoint: curl http://localhost:8000/vpp/simulate")
         return 0
     else:
         print(f"\n[ERROR] {total - passed_count} test(s) failed")

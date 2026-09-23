@@ -29,7 +29,7 @@ backend/
 
 ### Key Components
 
-#### 1. `VPPOptimizer` Class ([modules/optimization.py](modules/optimization.py))
+#### 1. `VPPOptimizer` Class ([modules/optimization.py](../modules/optimization.py))
 
 The heart of the system. Uses `scipy.optimize.linprog` to solve:
 
@@ -419,7 +419,7 @@ open http://localhost:8000/docs
 ### Production Checklist
 
 1. Install dependencies: `pip install scipy fastapi uvicorn`
-2. Set CORS origins in [main.py](backend/main.py)
+2. Set CORS origins in [main.py](../backend/main.py)
 3. Configure grid limits per region (UK DNO-specific)
 4. Add authentication for sensitive endpoints
 5. Deploy to cloud (AWS Lambda, Railway, etc.)
@@ -459,9 +459,9 @@ open http://localhost:8000/docs
 
 ### Code References
 
-- **Optimization Engine:** [modules/optimization.py](modules/optimization.py)
-- **API Routes:** [backend/routes/vpp.py](backend/routes/vpp.py)
-- **Data Models:** [backend/models.py](backend/models.py)
+- **Optimization Engine:** [modules/optimization.py](../modules/optimization.py)
+- **API Routes:** [backend/routes/vpp.py](../backend/routes/vpp.py)
+- **Data Models:** [backend/models.py](../backend/models.py)
 
 ---
 
