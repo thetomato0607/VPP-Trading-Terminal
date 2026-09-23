@@ -4,6 +4,9 @@ VPP Integration Test Suite
 Verifies that the VPP engine is properly integrated and working.
 """
 
+# AI-assisted (Claude, 7f566e9): checks converted from print/return-bool to real
+# asserts with Claude.
+
 import sys
 
 

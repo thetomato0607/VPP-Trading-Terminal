@@ -1,22 +1,16 @@
+"""Battery degradation cost model used to report wear cost after optimisation."""
+
 import numpy as np
 from typing import List
 
 class BatteryDegradationModel:
-    """
-    Model battery degradation based on Tesla Powerwall warranty.
-    
-    Tesla guarantees:
-    - 70% capacity after 10 years
-    - Assumes ~3,650 cycles over lifetime
-    - Warranty value: £7,000 × 30% = £2,100 degradation cost
-    
-    Cost per cycle: £2,100 / 3,650 = £0.58/cycle
-    Cost per kWh: £0.58 / 13.5 kWh = £0.043/kWh
-    
-    BUT: Depth-of-discharge matters (non-linear)
-    - 100% DoD: 1.0x wear
-    - 50% DoD: 0.5x wear
-    - 25% DoD: 0.15x wear (quadratic relationship)
+    """Battery wear cost derived from a Tesla Powerwall-style warranty.
+
+    Warranty assumptions (defaults):
+    - 70% capacity retained after 3,650 cycles (about 10 years)
+    - Replacement cost £7,000, so lost value is £7,000 x 30% = £2,100
+
+    Cost per cycle: £2,100 / 3,650 = £0.58; per kWh: £0.58 / 13.5 kWh = £0.043.
     """
     
     def __init__(
@@ -40,18 +34,19 @@ class BatteryDegradationModel:
         discharge_kw: List[float],
         timestep_hours: float = 0.25
     ) -> float:
-        """
-        Calculate total degradation cost for a schedule.
-        
-        Uses square of discharge depth to model non-linear wear:
-            Cost = Σ[(discharge / capacity)² × cost_per_cycle]
-        
-        This penalizes deep cycles much more than shallow cycles.
+        """Return the wear cost (GBP) of a discharge schedule.
+
+        Squares each timestep's discharged energy as a fraction of capacity:
+            cost = sum_t (discharge_kwh_t / capacity) ** 2 * cost_per_cycle
+
+        The square is applied per timestep, not per charge/discharge cycle, so the
+        result depends on ``timestep_hours``: a full discharge spread over many
+        short steps costs far less than one cycle.
         """
         discharge_kwh = np.array(discharge_kw) * timestep_hours
         depth_of_discharge = discharge_kwh / self.capacity
         
-        # Quadratic penalty (deep cycles wear faster)
+        # Quadratic penalty, intended to make deep discharges wear faster.
         cycle_equivalent = np.sum(depth_of_discharge ** 2)
         
         degradation_cost = cycle_equivalent * self.cost_per_cycle
@@ -63,7 +58,7 @@ class BatteryDegradationModel:
         discharge_kw: List[float],
         timestep_hours: float = 0.25
     ) -> float:
-        """Calculate equivalent full cycles."""
+        """Return equivalent full cycles: total discharged energy divided by capacity."""
         total_discharge_kwh = np.sum(discharge_kw) * timestep_hours
         cycles = total_discharge_kwh / self.capacity
         return float(cycles)

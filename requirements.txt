@@ -1,5 +1,7 @@
 # VPP Trading Terminal Dependencies
 # ==================================
+# AI-assisted (Claude, 9308ab3 + 7f566e9): every version pin below was chosen
+# with Claude (numpy/scipy/pandas/pydantic re-pinned, requests added).
 
 # Core scientific computing
 # (bumped from the original 1.21.0/1.7.0/1.3.0 floors: those predate

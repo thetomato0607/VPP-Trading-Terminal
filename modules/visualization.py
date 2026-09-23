@@ -17,7 +17,7 @@ COLORS = {
     'loss': '#FF4B4B',       # Red (sell/discharge)
     'price': '#FFD93D',      # Gold
     'soc': '#6BCF7F',        # Green
-    'grid_limit': '#FF4B4B', # Red danger
+    'grid_limit': '#FF4B4B',  # Red danger
     'grid_safe': '#00D9FF',  # Cyan safe
     'background': '#0E1117',
     'grid_color': '#262730'

@@ -16,6 +16,9 @@ Usage:
     python test_api.py
 """
 
+# AI-assisted (Claude, 7f566e9): checks converted from print/return-bool to real
+# asserts with Claude, and the live-API tests gated behind RUN_LIVE_API_TESTS.
+
 import os
 
 import pytest

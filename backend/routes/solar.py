@@ -1,3 +1,5 @@
+"""Placeholder solar endpoints: fixed synthetic data, no external API calls."""
+
 from fastapi import APIRouter, Query
 from datetime import date, timedelta
 import math
@@ -6,6 +8,11 @@ router = APIRouter()
 
 @router.get("/forecast")
 def forecast(location: str = Query(...), system_size: float = Query(..., gt=0)):
+  """Return a 7-day PV energy forecast in kWh.
+
+  Placeholder: a fixed sine pattern scaled by ``system_size``; ``location``
+  is accepted but not used, and no weather data is involved.
+  """
   today = date.today()
   daily = []
   for i in range(7):
@@ -18,6 +25,7 @@ def forecast(location: str = Query(...), system_size: float = Query(..., gt=0)):
 
 @router.get("/weather")
 def weather(lat: float, lon: float):
+    """Return fixed placeholder weather; ``lat``/``lon`` are ignored."""
     # Safe fake weather for now
     return {
         "weather": [{"main": "Clouds"}],

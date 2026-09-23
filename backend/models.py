@@ -1,7 +1,10 @@
+"""Pydantic request/response schemas for the FastAPI backend."""
+
 from pydantic import BaseModel
 from typing import List, Optional
 
 class OnboardingRequest(BaseModel):
+    """User onboarding payload; not referenced by any current route."""
     user_id: str
     location: str
     has_panels: bool
@@ -9,6 +12,7 @@ class OnboardingRequest(BaseModel):
     goal: str
 
 class SummaryResponse(BaseModel):
+    """Daily savings summary; not referenced by any current route."""
     user_id: str
     daily_saving_gbp: float
     co2_offset_kg: float

@@ -1,5 +1,8 @@
 """Test that market data is now dynamic (not static)."""
 
+# AI-assisted (Claude, 7f566e9): checks converted from print/return-bool to real
+# asserts with Claude.
+
 from modules.market_data import MarketDataGenerator
 
 

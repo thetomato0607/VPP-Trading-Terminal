@@ -319,3 +319,10 @@ This project demonstrates:
 
 ---
 
+## AI assistance
+
+Parts of this repository were written or changed with Claude, Anthropic's AI assistant. Affected code is marked in place with comments of the form `AI-assisted (Claude, <commit>)`; list them with `git grep -n "AI-assisted"`.
+
+- `9308ab3`: `backend/main.py` (new), README/guide fixes, LICENSE, dependency pins.
+- `7f566e9`: test checks converted to real asserts, live-API tests gated behind `RUN_LIVE_API_TESTS`, `pytest.ini`, CI step, dependency pins.
+- The commit that added this section: docstrings and explanatory comments across the code.

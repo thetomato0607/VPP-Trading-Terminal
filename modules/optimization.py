@@ -119,6 +119,8 @@ class BatteryOptimizer:
         # Objective: Maximize revenue = Σ(grid_export × price × dt) - Σ(cycles × degradation_cost)
         # grid_export = solar - load + discharge - charge
         # Minimize negative revenue (with degradation penalty)
+        # Only battery terms enter the objective: solar - load is fixed. This assumes
+        # import and export are both priced at price[t].
         c = np.zeros(3*N + 1)
         for t in range(N):
             # Charging costs: Electricity price + Degradation wear
@@ -170,6 +172,7 @@ class BatteryOptimizer:
         b_eq = []
 
         # Battery dynamics: SoC[t+1] = SoC[t] + (η*charge - discharge/η)*dt
+        # Split the round-trip loss evenly between charging and discharging.
         eta_charge = np.sqrt(asset.efficiency)
         eta_discharge = np.sqrt(asset.efficiency)
 

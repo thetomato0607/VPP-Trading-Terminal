@@ -9,6 +9,9 @@ Run locally with:
     uvicorn main:app --reload --port 8000
 """
 
+# AI-assisted (Claude, 9308ab3): this file was written with Claude (it was missing
+# but imported by the integration tests).
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
